@@ -1,0 +1,7 @@
+services:
+  minimalapi:
+    build: WebApi
+    container_name: minimalapi
+    ports:
+      - "5001:5001"
+    restart: always
