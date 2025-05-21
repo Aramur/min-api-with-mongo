@@ -1,7 +1,20 @@
 services:
-  minimalapi:
+  webapi:
     build: WebApi
-    container_name: minimalapi
-    ports:
-      - "5001:5001"
     restart: always
+    depends_on:
+      - mongodb
+    environment:
+      DatabaseSettings__ConnectionString: "mongodb://gbs:geheim@mongodb:27017"
+    ports:
+      - 5001:5001
+  mongodb:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: gbs
+      MONGO_INITDB_ROOT_PASSWORD: geheim
+    volumes:
+      - mongoData:/data/db
+volumes:
+  mongoData:
