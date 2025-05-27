@@ -1,0 +1,42 @@
+networks:
+  gbsnet:
+    external: true
+
+volumes:
+  websitedb:
+  website:
+
+secrets:
+  database:
+    file: password.txt
+
+services:
+  db:
+    image: mysql:9.3
+    container_name: db
+    restart: always
+    networks:
+      - gbsnet
+    volumes:
+      - websitedb:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: website_db
+      MYSQL_ROOT_PASSWORD: database
+    secrets:
+      - database
+
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress
+    restart: always
+    ports:
+      - "80:80"
+    networks:
+      - gbsnet
+    volumes:
+      - website:/var/www/html
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: website_db
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
